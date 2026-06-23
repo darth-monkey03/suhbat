@@ -4,6 +4,8 @@ const API = 'https://suhbat.onrender.com/api';
 const LANG = {
   en: {
     nav_home: 'Home', nav_fatawa: 'Fatawa', nav_videos: 'Videos',
+    welcome_name_en: 'Suhbat Ahl al-Athar',
+    welcome_name_ar: 'صحبة أهل الأثر',
     welcome_subtitle: 'Lectures · Reminders · Knowledge',
     welcome_quote: 'Seeking knowledge is an obligation upon every Muslim.',
     welcome_source: '— The Prophet Muhammad ﷺ · Ibn Majah',
@@ -37,6 +39,8 @@ const LANG = {
   },
   ar: {
     nav_home: 'الرئيسية', nav_fatawa: 'الفتاوى', nav_videos: 'المقاطع',
+    welcome_name_en: 'صحبة أهل الأثر',
+    welcome_name_ar: 'Suhbat Ahl al-Athar',
     welcome_subtitle: 'محاضرات · تذكيرات · علم',
     welcome_quote: 'طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ',
     welcome_source: '— النبي محمد ﷺ · ابن ماجه',
@@ -170,8 +174,8 @@ function renderWelcome() {
       <div class="welcome__logo">
         <img src="images/logo.png" alt="Suhbat Ahl al-Athar" style="width:clamp(120px,20vw,200px);height:clamp(120px,20vw,200px);object-fit:contain;border-radius:50%;" />
       </div>
-      <h1 class="welcome__name-en">Suhbat Ahl al-Athar</h1>
-      <p class="welcome__name-ar">صحبة أهل الأثر</p>
+      <h1 class="welcome__name-en">${t('welcome_name_en')}</h1>
+      <p class="welcome__name-ar">${t('welcome_name_ar')}</p>
       <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2rem;">${t('welcome_subtitle')}</p>
       <div class="welcome__divider">
         <span class="welcome__divider-line"></span>
