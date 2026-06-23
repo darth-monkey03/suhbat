@@ -50,38 +50,25 @@ async function getDb() {
     title TEXT NOT NULL,
     youtube_url TEXT NOT NULL,
     description TEXT,
+    category_id INTEGER,
     author TEXT DEFAULT 'Suhbat Ahl al-Athar',
     published INTEGER DEFAULT 1,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
   )`);
 
-  const catCount = db.exec('SELECT COUNT(*) as count FROM categories')[0];
-  if (catCount.values[0][0] === 0) {
-    db.run(`INSERT INTO categories (name, slug, description) VALUES ('Fatawa', 'fatawa', 'Islamic legal rulings and verdicts')`);
-    db.run(`INSERT INTO categories (name, slug, description) VALUES ('Lectures', 'lectures', 'Full lecture transcripts and summaries')`);
-    db.run(`INSERT INTO categories (name, slug, description) VALUES ('Reminders', 'reminders', 'Short daily reminders and reflections')`);
-    db.run(`INSERT INTO categories (name, slug, description) VALUES ('Aqeedah', 'aqeedah', 'Matters of Islamic creed and belief')`);
-    db.run(`INSERT INTO categories (name, slug, description) VALUES ('Seerah', 'seerah', 'The life of the Prophet')`);
-
-    db.run(`INSERT INTO articles (title, slug, excerpt, content, category_id, author) VALUES (
-      'The Ruling on Praying Behind an Imam Who Makes Mistakes in Recitation',
-      'ruling-praying-behind-imam-mistakes-recitation',
-      'A common question regarding the validity of prayer when the Imam makes errors during recitation.',
-      '<p><strong>Question:</strong> What is the ruling on praying behind an imam who makes mistakes in his recitation of al-Fatihah?</p><h2>Type One: Mistakes That Change the Meaning</h2><p>If the error changes the meaning to something that contradicts the religion, the prayer behind him is invalid if done deliberately.</p><h2>Type Two: Mistakes That Do Not Change the Meaning</h2><p>Minor errors that do not alter the meaning do not affect the validity of the prayer.</p><p><em>And Allah knows best.</em></p>',
-      1,
-      'Suhbat Ahl al-Athar'
-    )`);
-  }
-
-  const vidCount = db.exec('SELECT COUNT(*) as count FROM videos')[0];
-  if (vidCount.values[0][0] === 0) {
-    db.run(`INSERT INTO videos (title, youtube_url, description, author) VALUES (
-      'Introduction to Suhbat Ahl al-Athar',
-      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      'A brief introduction to our channel and methodology.',
-      'Suhbat Ahl al-Athar'
-    )`);
-  }
+  const cats = [
+    ['Fatawa',    'fatawa',    'Islamic legal rulings'],
+    ['Aqeedah',   'aqeedah',   'Islamic creed and belief'],
+    ['Tafseer',   'tafseer',   'Quran exegesis'],
+    ['Hadith',    'hadith',    'Prophetic narrations'],
+    ['Fiqh',      'fiqh',      'Islamic jurisprudence'],
+    ['Lectures',  'lectures',  'Full lectures'],
+    ['Reminders', 'reminders', 'Short reminders'],
+  ];
+  cats.forEach(([name, slug, desc]) => {
+    try { db.run(`INSERT INTO categories (name, slug, description) VALUES (?, ?, ?)`, [name, slug, desc]); } catch(e) {}
+  });
 
   save();
 

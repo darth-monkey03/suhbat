@@ -9,7 +9,6 @@
 </head>
 <body>
 
-  <!-- LOGIN PAGE -->
   <div id="login-page" class="login-page">
     <div class="login-box">
       <img src="images/logo.png" alt="Logo" class="login-logo" />
@@ -21,17 +20,15 @@
     </div>
   </div>
 
-  <!-- ADMIN DASHBOARD -->
   <div id="admin-page" class="admin-page" style="display:none">
-
     <aside class="sidebar">
       <div class="sidebar__logo">
         <img src="images/logo.png" alt="Logo" class="sidebar__logo-img" />
         <span>Admin Panel</span>
       </div>
       <nav class="sidebar__nav">
-        <button class="sidebar__btn active" data-tab="fatawa">📄 Fatawa</button>
-        <button class="sidebar__btn" data-tab="videos">🎥 Videos</button>
+        <button class="sidebar__btn active" data-tab="fatawa">📄 Add Fatwa</button>
+        <button class="sidebar__btn" data-tab="videos">🎥 Add Video</button>
         <button class="sidebar__btn" data-tab="list">📋 All Content</button>
       </nav>
       <button class="sidebar__logout" id="logout-btn">Logout</button>
@@ -41,21 +38,29 @@
 
       <!-- FATAWA TAB -->
       <div id="tab-fatawa" class="tab active">
-        <div class="tab-header">
-          <h2>Add New Fatwa</h2>
-        </div>
+        <div class="tab-header"><h2>Add New Fatwa</h2></div>
         <div class="form-card">
           <div class="form-group">
-            <label>Title (in Arabic or English)</label>
+            <label>Category</label>
+            <select id="fatwa-category" class="form-select">
+              <option value="1">Fatawa (General)</option>
+              <option value="2">Aqeedah — عقيدة</option>
+              <option value="3">Tafseer — تفسير</option>
+              <option value="4">Hadith — حديث</option>
+              <option value="5">Fiqh — فقه</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Title</label>
             <input type="text" id="fatwa-title" placeholder="e.g. The Ruling on Fasting on Fridays" />
           </div>
           <div class="form-group">
-            <label>URL Slug (no spaces, use dashes)</label>
+            <label>URL Slug (auto-generated)</label>
             <input type="text" id="fatwa-slug" placeholder="e.g. ruling-on-fasting-fridays" />
           </div>
           <div class="form-group">
             <label>Short Excerpt (shown on card)</label>
-            <textarea id="fatwa-excerpt" rows="3" placeholder="A brief summary shown on the Fatawa page..."></textarea>
+            <textarea id="fatwa-excerpt" rows="3" placeholder="A brief summary..."></textarea>
           </div>
           <div class="form-group">
             <label>Full Content (HTML allowed)</label>
@@ -63,7 +68,7 @@
           </div>
           <div class="form-group">
             <label>Author</label>
-            <input type="text" id="fatwa-author" placeholder="Suhbat Ahl al-Athar" value="Suhbat Ahl al-Athar" />
+            <input type="text" id="fatwa-author" value="Suhbat Ahl al-Athar" />
           </div>
           <div id="fatwa-msg" class="form-msg" style="display:none"></div>
           <button class="submit-btn" id="fatwa-submit">Publish Fatwa</button>
@@ -72,10 +77,19 @@
 
       <!-- VIDEOS TAB -->
       <div id="tab-videos" class="tab" style="display:none">
-        <div class="tab-header">
-          <h2>Add New Video</h2>
-        </div>
+        <div class="tab-header"><h2>Add New Video</h2></div>
         <div class="form-card">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="video-category" class="form-select">
+              <option value="2">Aqeedah — عقيدة</option>
+              <option value="3">Tafseer — تفسير</option>
+              <option value="4">Hadith — حديث</option>
+              <option value="5">Fiqh — فقه</option>
+              <option value="6">Lectures</option>
+              <option value="7">Reminders</option>
+            </select>
+          </div>
           <div class="form-group">
             <label>Video Title</label>
             <input type="text" id="video-title" placeholder="e.g. Lecture on Tawheed" />
@@ -86,11 +100,11 @@
           </div>
           <div class="form-group">
             <label>Description (optional)</label>
-            <textarea id="video-desc" rows="4" placeholder="Brief description of the video..."></textarea>
+            <textarea id="video-desc" rows="4" placeholder="Brief description..."></textarea>
           </div>
           <div class="form-group">
             <label>Author</label>
-            <input type="text" id="video-author" placeholder="Suhbat Ahl al-Athar" value="Suhbat Ahl al-Athar" />
+            <input type="text" id="video-author" value="Suhbat Ahl al-Athar" />
           </div>
           <div id="video-msg" class="form-msg" style="display:none"></div>
           <button class="submit-btn" id="video-submit">Publish Video</button>
@@ -99,9 +113,7 @@
 
       <!-- LIST TAB -->
       <div id="tab-list" class="tab" style="display:none">
-        <div class="tab-header">
-          <h2>All Content</h2>
-        </div>
+        <div class="tab-header"><h2>All Content</h2></div>
         <div class="list-section">
           <h3>Fatawa</h3>
           <div id="fatawa-list" class="content-list">Loading...</div>

@@ -32,21 +32,18 @@ body { font-family: var(--font); background: var(--parchment); color: var(--ink)
 .login-input {
   width: 100%; padding: 0.85rem 1rem; background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; color: var(--white);
-  font-size: 1rem; outline: none; margin-bottom: 1rem;
-  transition: border-color 0.2s;
+  font-size: 1rem; outline: none; margin-bottom: 1rem; transition: border-color 0.2s;
 }
 .login-input:focus { border-color: var(--gold); }
 .login-btn {
   width: 100%; padding: 0.85rem; background: var(--gold); color: var(--ink);
   border: none; border-radius: 3px; font-size: 0.85rem; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
-  transition: background 0.2s;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;
 }
 .login-btn:hover { background: var(--gold-dim); }
 
 /* ─── Admin Layout ─── */
 .admin-page { display: flex; min-height: 100vh; }
-
 .sidebar {
   width: 240px; background: var(--ink); display: flex; flex-direction: column;
   position: fixed; top: 0; left: 0; height: 100vh; z-index: 10;
@@ -74,7 +71,6 @@ body { font-family: var(--font); background: var(--parchment); color: var(--ink)
   font-size: 0.8rem; transition: all 0.2s;
 }
 .sidebar__logout:hover { border-color: var(--red); color: var(--red); }
-
 .admin-main { margin-left: 240px; flex: 1; padding: 2.5rem; }
 
 /* ─── Tabs ─── */
@@ -92,28 +88,25 @@ body { font-family: var(--font); background: var(--parchment); color: var(--ink)
   letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--muted); margin-bottom: 0.5rem;
 }
-.form-group input, .form-group textarea {
+.form-group input, .form-group textarea, .form-select {
   width: 100%; padding: 0.75rem 1rem;
   border: 1px solid var(--line); border-radius: 3px;
   font-size: 0.95rem; font-family: var(--font);
   outline: none; transition: border-color 0.2s;
   background: var(--parchment);
 }
-.form-group input:focus, .form-group textarea:focus { border-color: var(--gold); background: var(--white); }
+.form-group input:focus, .form-group textarea:focus, .form-select:focus { border-color: var(--gold); background: var(--white); }
 .form-group textarea { resize: vertical; line-height: 1.6; }
+.form-select { cursor: pointer; }
 
-.form-msg {
-  padding: 0.75rem 1rem; border-radius: 3px;
-  font-size: 0.875rem; margin-bottom: 1rem;
-}
+.form-msg { padding: 0.75rem 1rem; border-radius: 3px; font-size: 0.875rem; margin-bottom: 1rem; }
 .form-msg.success { background: rgba(45,122,79,0.1); color: var(--green); border: 1px solid rgba(45,122,79,0.2); }
 .form-msg.error   { background: rgba(192,57,43,0.1); color: var(--red);   border: 1px solid rgba(192,57,43,0.2); }
 
 .submit-btn {
   padding: 0.85rem 2.5rem; background: var(--gold); color: var(--ink);
   border: none; border-radius: 3px; font-size: 0.8rem; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
-  transition: background 0.2s;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;
 }
 .submit-btn:hover { background: var(--gold-dim); }
 .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -135,6 +128,7 @@ body { font-family: var(--font); background: var(--parchment); color: var(--ink)
 }
 .list-item__delete:hover { background: var(--red); color: var(--white); }
 
+/* ─── Responsive ─── */
 @media (max-width: 768px) {
   .sidebar { width: 100%; height: auto; position: relative; }
   .admin-main { margin-left: 0; padding: 1.5rem; }
