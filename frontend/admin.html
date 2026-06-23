@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Suhbat Ahl al-Athar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <!-- LOGIN PAGE -->
+  <div id="login-page" class="login-page">
+    <div class="login-box">
+      <img src="images/logo.png" alt="Logo" class="login-logo" />
+      <h1 class="login-title">Admin Panel</h1>
+      <p class="login-sub">Suhbat Ahl al-Athar</p>
+      <div id="login-error" class="login-error" style="display:none">Incorrect password</div>
+      <input type="password" id="login-password" class="login-input" placeholder="Enter password" />
+      <button class="login-btn" id="login-btn">Login</button>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="admin-page" class="admin-page" style="display:none">
+
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <img src="images/logo.png" alt="Logo" class="sidebar__logo-img" />
+        <span>Admin Panel</span>
+      </div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__btn active" data-tab="fatawa">📄 Fatawa</button>
+        <button class="sidebar__btn" data-tab="videos">🎥 Videos</button>
+        <button class="sidebar__btn" data-tab="list">📋 All Content</button>
+      </nav>
+      <button class="sidebar__logout" id="logout-btn">Logout</button>
+    </aside>
+
+    <main class="admin-main">
+
+      <!-- FATAWA TAB -->
+      <div id="tab-fatawa" class="tab active">
+        <div class="tab-header">
+          <h2>Add New Fatwa</h2>
+        </div>
+        <div class="form-card">
+          <div class="form-group">
+            <label>Title (in Arabic or English)</label>
+            <input type="text" id="fatwa-title" placeholder="e.g. The Ruling on Fasting on Fridays" />
+          </div>
+          <div class="form-group">
+            <label>URL Slug (no spaces, use dashes)</label>
+            <input type="text" id="fatwa-slug" placeholder="e.g. ruling-on-fasting-fridays" />
+          </div>
+          <div class="form-group">
+            <label>Short Excerpt (shown on card)</label>
+            <textarea id="fatwa-excerpt" rows="3" placeholder="A brief summary shown on the Fatawa page..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Full Content (HTML allowed)</label>
+            <textarea id="fatwa-content" rows="12" placeholder="<p>Question: ...</p><p>Answer: ...</p>"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Author</label>
+            <input type="text" id="fatwa-author" placeholder="Suhbat Ahl al-Athar" value="Suhbat Ahl al-Athar" />
+          </div>
+          <div id="fatwa-msg" class="form-msg" style="display:none"></div>
+          <button class="submit-btn" id="fatwa-submit">Publish Fatwa</button>
+        </div>
+      </div>
+
+      <!-- VIDEOS TAB -->
+      <div id="tab-videos" class="tab" style="display:none">
+        <div class="tab-header">
+          <h2>Add New Video</h2>
+        </div>
+        <div class="form-card">
+          <div class="form-group">
+            <label>Video Title</label>
+            <input type="text" id="video-title" placeholder="e.g. Lecture on Tawheed" />
+          </div>
+          <div class="form-group">
+            <label>YouTube URL</label>
+            <input type="text" id="video-url" placeholder="https://www.youtube.com/watch?v=XXXXXXXXX" />
+          </div>
+          <div class="form-group">
+            <label>Description (optional)</label>
+            <textarea id="video-desc" rows="4" placeholder="Brief description of the video..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Author</label>
+            <input type="text" id="video-author" placeholder="Suhbat Ahl al-Athar" value="Suhbat Ahl al-Athar" />
+          </div>
+          <div id="video-msg" class="form-msg" style="display:none"></div>
+          <button class="submit-btn" id="video-submit">Publish Video</button>
+        </div>
+      </div>
+
+      <!-- LIST TAB -->
+      <div id="tab-list" class="tab" style="display:none">
+        <div class="tab-header">
+          <h2>All Content</h2>
+        </div>
+        <div class="list-section">
+          <h3>Fatawa</h3>
+          <div id="fatawa-list" class="content-list">Loading...</div>
+        </div>
+        <div class="list-section">
+          <h3>Videos</h3>
+          <div id="videos-list" class="content-list">Loading...</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

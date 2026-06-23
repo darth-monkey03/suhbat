@@ -1,0 +1,142 @@
+/* ─── Reset & Tokens ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #0f0f0f;
+  --gold: #c9a84c;
+  --gold-dim: #a07c2e;
+  --parchment: #faf8f4;
+  --white: #ffffff;
+  --line: #e4e0d8;
+  --muted: #6b6b6b;
+  --green: #2d7a4f;
+  --red: #c0392b;
+  --font: 'Inter', system-ui, sans-serif;
+  --display: 'Playfair Display', serif;
+}
+body { font-family: var(--font); background: var(--parchment); color: var(--ink); }
+
+/* ─── Login Page ─── */
+.login-page {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--ink);
+}
+.login-box {
+  background: #1a1a1a; border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 4px; padding: 3rem 2.5rem; width: 100%; max-width: 380px;
+  text-align: center;
+}
+.login-logo { width: 80px; height: 80px; object-fit: contain; margin: 0 auto 1.5rem; border-radius: 50%; }
+.login-title { font-family: var(--display); color: var(--white); font-size: 1.5rem; margin-bottom: 0.25rem; }
+.login-sub { color: var(--gold); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem; }
+.login-error { background: rgba(192,57,43,0.15); color: #e74c3c; border: 1px solid rgba(192,57,43,0.3); border-radius: 3px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.85rem; }
+.login-input {
+  width: 100%; padding: 0.85rem 1rem; background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; color: var(--white);
+  font-size: 1rem; outline: none; margin-bottom: 1rem;
+  transition: border-color 0.2s;
+}
+.login-input:focus { border-color: var(--gold); }
+.login-btn {
+  width: 100%; padding: 0.85rem; background: var(--gold); color: var(--ink);
+  border: none; border-radius: 3px; font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  transition: background 0.2s;
+}
+.login-btn:hover { background: var(--gold-dim); }
+
+/* ─── Admin Layout ─── */
+.admin-page { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 240px; background: var(--ink); display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; height: 100vh; z-index: 10;
+  border-right: 1px solid rgba(201,168,76,0.15);
+}
+.sidebar__logo {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 1.5rem 1.25rem; border-bottom: 1px solid rgba(201,168,76,0.15);
+  color: var(--white); font-size: 0.85rem; font-weight: 600;
+}
+.sidebar__logo-img { width: 36px; height: 36px; object-fit: contain; border-radius: 50%; }
+.sidebar__nav { flex: 1; padding: 1.5rem 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.sidebar__btn {
+  width: 100%; text-align: left; padding: 0.75rem 1rem;
+  background: none; border: none; color: rgba(255,255,255,0.6);
+  font-size: 0.875rem; font-weight: 500; cursor: pointer; border-radius: 3px;
+  transition: all 0.2s;
+}
+.sidebar__btn:hover { background: rgba(255,255,255,0.06); color: var(--white); }
+.sidebar__btn.active { background: rgba(201,168,76,0.15); color: var(--gold); }
+.sidebar__logout {
+  margin: 1rem 0.75rem; padding: 0.65rem 1rem;
+  background: none; border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.4); border-radius: 3px; cursor: pointer;
+  font-size: 0.8rem; transition: all 0.2s;
+}
+.sidebar__logout:hover { border-color: var(--red); color: var(--red); }
+
+.admin-main { margin-left: 240px; flex: 1; padding: 2.5rem; }
+
+/* ─── Tabs ─── */
+.tab-header { margin-bottom: 2rem; }
+.tab-header h2 { font-family: var(--display); font-size: 1.75rem; }
+
+/* ─── Form Card ─── */
+.form-card {
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: 4px; padding: 2rem; max-width: 720px;
+}
+.form-group { margin-bottom: 1.5rem; }
+.form-group label {
+  display: block; font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 0.5rem;
+}
+.form-group input, .form-group textarea {
+  width: 100%; padding: 0.75rem 1rem;
+  border: 1px solid var(--line); border-radius: 3px;
+  font-size: 0.95rem; font-family: var(--font);
+  outline: none; transition: border-color 0.2s;
+  background: var(--parchment);
+}
+.form-group input:focus, .form-group textarea:focus { border-color: var(--gold); background: var(--white); }
+.form-group textarea { resize: vertical; line-height: 1.6; }
+
+.form-msg {
+  padding: 0.75rem 1rem; border-radius: 3px;
+  font-size: 0.875rem; margin-bottom: 1rem;
+}
+.form-msg.success { background: rgba(45,122,79,0.1); color: var(--green); border: 1px solid rgba(45,122,79,0.2); }
+.form-msg.error   { background: rgba(192,57,43,0.1); color: var(--red);   border: 1px solid rgba(192,57,43,0.2); }
+
+.submit-btn {
+  padding: 0.85rem 2.5rem; background: var(--gold); color: var(--ink);
+  border: none; border-radius: 3px; font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  transition: background 0.2s;
+}
+.submit-btn:hover { background: var(--gold-dim); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ─── Content List ─── */
+.list-section { margin-bottom: 3rem; }
+.list-section h3 { font-family: var(--display); font-size: 1.25rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--line); }
+.content-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.list-item {
+  background: var(--white); border: 1px solid var(--line); border-radius: 3px;
+  padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between;
+}
+.list-item__title { font-weight: 600; font-size: 0.9rem; }
+.list-item__date  { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+.list-item__delete {
+  background: none; border: 1px solid rgba(192,57,43,0.3); color: var(--red);
+  padding: 0.4rem 0.9rem; border-radius: 3px; cursor: pointer; font-size: 0.75rem;
+  transition: all 0.2s; white-space: nowrap;
+}
+.list-item__delete:hover { background: var(--red); color: var(--white); }
+
+@media (max-width: 768px) {
+  .sidebar { width: 100%; height: auto; position: relative; }
+  .admin-main { margin-left: 0; padding: 1.5rem; }
+  .admin-page { flex-direction: column; }
+}
