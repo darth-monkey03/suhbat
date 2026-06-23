@@ -1,0 +1,226 @@
+/* ─── Design Tokens ─── */
+:root {
+  --ink:        #0f0f0f;
+  --parchment:  #faf8f4;
+  --gold:       #c9a84c;
+  --gold-dim:   #a07c2e;
+  --muted:      #6b6b6b;
+  --line:       #e4e0d8;
+  --white:      #ffffff;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-arabic:  'Amiri', serif;
+  --max-w:      1200px;
+  --max-w-text: 740px;
+  --radius:     2px;
+  --ease:       0.22s ease;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--parchment); color: var(--ink); line-height: 1.7; }
+img  { max-width: 100%; display: block; }
+a    { color: inherit; text-decoration: none; }
+
+/* ─── Utility ─── */
+.container       { max-width: var(--max-w);      margin: 0 auto; padding: 0 2rem; }
+.container--text { max-width: var(--max-w-text); margin: 0 auto; padding: 0 2rem; }
+
+/* ─── Header / Nav ─── */
+.site-header {
+  background: var(--ink);
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid rgba(201,168,76,0.25);
+}
+.nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2rem; max-width: var(--max-w); margin: 0 auto;
+}
+.nav__logo { display: flex; align-items: center; gap: 0.75rem; }
+.nav__logo-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--gold); color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-arabic); font-size: 1.2rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.nav__logo-en { font-family: var(--font-display); font-size: 0.95rem; color: var(--white); line-height: 1.15; display: block; }
+.nav__logo-ar { font-size: 0.7rem; color: var(--gold); display: block; }
+
+.nav__links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+.nav__links a {
+  color: rgba(255,255,255,0.65); font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  transition: color var(--ease); position: relative; padding-bottom: 2px;
+}
+.nav__links a::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: var(--gold); transform: scaleX(0);
+  transition: transform var(--ease); transform-origin: left;
+}
+.nav__links a:hover, .nav__links a.active { color: var(--gold); }
+.nav__links a.active::after, .nav__links a:hover::after { transform: scaleX(1); }
+
+.nav__toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.nav__toggle span { width: 22px; height: 2px; background: var(--white); display: block; transition: var(--ease); }
+
+/* ─── Welcome Page ─── */
+.welcome-page {
+  min-height: calc(100vh - 64px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--ink); text-align: center; padding: 4rem 2rem;
+  position: relative; overflow: hidden;
+}
+.welcome-page::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%,   rgba(201,168,76,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(201,168,76,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.welcome-page::after {
+  content: ''; position: absolute; inset: 2rem;
+  border: 1px solid rgba(201,168,76,0.15); pointer-events: none;
+}
+.welcome__logo {
+  font-family: var(--font-arabic);
+  font-size: clamp(4rem, 12vw, 9rem);
+  color: var(--gold); line-height: 1; margin-bottom: 2rem; opacity: 0.92;
+}
+.welcome__name-en {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.8rem);
+  color: var(--white); font-weight: 400; margin-bottom: 0.5rem;
+}
+.welcome__name-ar {
+  font-family: var(--font-arabic);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: rgba(255,255,255,0.45); margin-bottom: 3rem;
+}
+.welcome__divider {
+  display: flex; align-items: center; gap: 1rem;
+  width: min(400px, 90%); margin: 0 auto 3rem;
+}
+.welcome__divider-line { flex: 1; height: 1px; background: rgba(201,168,76,0.3); }
+.welcome__divider-diamond { width: 8px; height: 8px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+.welcome__quote {
+  font-family: var(--font-arabic);
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  color: rgba(255,255,255,0.75); line-height: 2;
+  max-width: 600px; margin: 0 auto 1rem; direction: rtl;
+}
+.welcome__quote-source { font-size: 0.75rem; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
+.welcome__nav-buttons { display: flex; gap: 1rem; margin-top: 3.5rem; flex-wrap: wrap; justify-content: center; }
+.welcome__btn {
+  padding: 0.75rem 2.5rem; font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  cursor: pointer; border-radius: var(--radius); transition: all var(--ease); border: 1px solid;
+}
+.welcome__btn--primary { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.welcome__btn--primary:hover { background: var(--gold-dim); border-color: var(--gold-dim); }
+.welcome__btn--ghost { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.25); }
+.welcome__btn--ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ─── Shared Page Styles ─── */
+.page-header {
+  background: var(--ink); color: var(--white);
+  padding: 4rem 2rem 3rem; text-align: center;
+  border-bottom: 2px solid var(--gold);
+}
+.page-header__label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+.page-header__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); color: var(--white); margin-bottom: 0.75rem; }
+.page-header__subtitle { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+.page-body { padding: 4rem 0 6rem; }
+
+.search-bar { margin-bottom: 3rem; }
+.search-bar__input {
+  width: 100%; max-width: 480px; padding: 0.75rem 1.25rem;
+  border: 1px solid var(--line); border-radius: 30px;
+  font-size: 0.9rem; background: var(--white); outline: none;
+  transition: border-color var(--ease); display: block; margin: 0 auto;
+}
+.search-bar__input:focus { border-color: var(--gold); }
+
+.section-label { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+.section-label__text { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+.section-label__line { flex: 1; height: 1px; background: var(--line); }
+
+/* ─── Fatawa ─── */
+.fatawa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+.fatwa-card {
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 1.75rem; cursor: pointer;
+  transition: box-shadow var(--ease), transform var(--ease), border-color var(--ease);
+  display: flex; flex-direction: column;
+}
+.fatwa-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.07); transform: translateY(-2px); border-color: var(--gold); }
+.fatwa-card__label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.75rem; }
+.fatwa-card__title { font-family: var(--font-display); font-size: 1.1rem; line-height: 1.35; margin-bottom: 0.75rem; flex: 1; }
+.fatwa-card__excerpt { font-size: 0.85rem; color: var(--muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 1.25rem; }
+.fatwa-card__footer { display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; border-top: 1px solid var(--line); }
+.fatwa-card__date { font-size: 0.72rem; color: var(--muted); }
+.fatwa-card__read { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); display: flex; align-items: center; gap: 0.4rem; }
+.fatwa-card__arrow { color: var(--gold); transition: transform var(--ease); }
+.fatwa-card:hover .fatwa-card__arrow { transform: translateX(4px); }
+
+/* ─── Article View ─── */
+.article-view { padding: 4rem 0 6rem; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 2.5rem; transition: color var(--ease);
+  background: none; border: none; cursor: pointer; padding: 0;
+}
+.back-btn:hover { color: var(--ink); }
+.back-btn__arrow { transition: transform var(--ease); }
+.back-btn:hover .back-btn__arrow { transform: translateX(-3px); }
+.article-header { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
+.article-header__label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 1rem; }
+.article-header__title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 1rem; }
+.article-header__meta { color: var(--muted); font-size: 0.85rem; }
+.article-body { font-size: 1.05rem; line-height: 1.95; color: #1a1a1a; }
+.article-body p  { margin-bottom: 1.5rem; }
+.article-body h2 { font-family: var(--font-display); font-size: 1.4rem; margin: 2.5rem 0 1rem; padding-left: 1rem; border-left: 3px solid var(--gold); }
+.article-body strong { color: var(--ink); }
+.article-body em   { color: var(--gold-dim); }
+.article-body blockquote { border-left: 3px solid var(--gold); padding: 1rem 1.5rem; background: rgba(201,168,76,0.05); margin: 2rem 0; font-style: italic; color: var(--muted); }
+
+/* ─── Videos ─── */
+.videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem; }
+.video-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: box-shadow var(--ease), transform var(--ease); }
+.video-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.09); transform: translateY(-2px); }
+.video-card__embed { position: relative; padding-top: 56.25%; background: #000; }
+.video-card__embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.video-card__body { padding: 1.25rem 1.5rem 1.5rem; }
+.video-card__title { font-family: var(--font-display); font-size: 1rem; line-height: 1.35; margin-bottom: 0.5rem; }
+.video-card__desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+.video-card__meta { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--line); font-size: 0.72rem; color: var(--muted); }
+
+/* ─── Loading / Empty / Pagination ─── */
+.loading { text-align: center; padding: 5rem 0; color: var(--muted); }
+.loading__spinner { width: 32px; height: 32px; border: 2px solid var(--line); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { text-align: center; padding: 5rem 0; color: var(--muted); }
+.empty-state__icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+.pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 4rem; }
+.page-btn { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); cursor: pointer; font-size: 0.875rem; color: var(--ink); transition: all var(--ease); }
+.page-btn:hover { border-color: var(--gold); color: var(--gold-dim); }
+.page-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+/* ─── Footer ─── */
+.site-footer { background: var(--ink); color: rgba(255,255,255,0.4); text-align: center; padding: 3rem 2rem; font-size: 0.8rem; }
+.footer__calligraphy { font-family: var(--font-arabic); font-size: 1.8rem; color: var(--gold); margin-bottom: 0.75rem; opacity: 0.85; }
+.site-footer p { margin-bottom: 0.4rem; }
+.footer__dua { font-style: italic; color: rgba(255,255,255,0.3); margin-top: 0.5rem; }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .nav__links { display: none; }
+  .nav__toggle { display: flex; }
+  .nav__links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--ink); padding: 1.5rem 2rem; gap: 1rem; border-top: 1px solid rgba(201,168,76,0.2); z-index: 99; }
+  .welcome-page::after { inset: 1rem; }
+  .fatawa-grid, .videos-grid { grid-template-columns: 1fr; }
+  .welcome__nav-buttons { flex-direction: column; align-items: center; }
+  .welcome__btn { width: 220px; text-align: center; }
+}
