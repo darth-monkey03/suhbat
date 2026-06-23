@@ -1,5 +1,5 @@
 /* ─── Config ─── */
-const API = 'http://localhost:3001/api';
+const API = 'https://suhbat.onrender.com/api';
 
 /* ─── Helpers ─── */
 const $ = id => document.getElementById(id);
