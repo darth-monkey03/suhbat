@@ -184,7 +184,8 @@ a    { color: inherit; text-decoration: none; }
   display: flex; flex-direction: column;
 }
 .fatwa-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.07); transform: translateY(-2px); border-color: var(--gold); }
-.fatwa-card__label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.75rem; }
+.fatwa-card__label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-dim); }
+.fatwa-card__number { font-size: 0.7rem; font-weight: 600; color: var(--gold); opacity: 0.6; letter-spacing: 0.05em; white-space: nowrap; }
 .fatwa-card__title { font-family: var(--font-display); font-size: 1.1rem; line-height: 1.35; margin-bottom: 0.75rem; flex: 1; }
 .fatwa-card__excerpt { font-size: 0.85rem; color: var(--muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 1.25rem; }
 .fatwa-card__footer { display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; border-top: 1px solid var(--line); }

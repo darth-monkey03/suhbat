@@ -1,4 +1,4 @@
-const API = 'https://suhbat.onrender.com/api';
+const API = 'https://suhbat.one/api';
 const PASSWORD = 'Linde0311';
 
 const loginPage  = document.getElementById('login-page');
@@ -63,12 +63,13 @@ document.getElementById('fatwa-title').addEventListener('input', e => {
 /* ─── Reset Fatwa Form ─── */
 function resetFatwaForm() {
   editingArticleId = null;
-  document.getElementById('fatwa-title').value = '';
-  document.getElementById('fatwa-slug').value = '';
+  document.getElementById('fatwa-number').value  = '';
+  document.getElementById('fatwa-title').value   = '';
+  document.getElementById('fatwa-slug').value    = '';
   document.getElementById('fatwa-excerpt').value = '';
   document.getElementById('fatwa-question').value = '';
   document.getElementById('fatwa-content').value = '';
-  document.getElementById('fatwa-author').value = 'Suhbat Ahl al-Athar';
+  document.getElementById('fatwa-author').value  = 'Suhbat Ahl al-Athar';
   document.getElementById('fatwa-submit').textContent = 'Publish Fatwa';
   document.getElementById('fatwa-form-title').textContent = 'Add New Fatwa';
   const cancelBtn = document.getElementById('fatwa-cancel');
@@ -82,6 +83,7 @@ async function editArticle(id) {
     const a = await res.json();
 
     editingArticleId = id;
+    document.getElementById('fatwa-number').value   = a.fatwa_number || '';
     document.getElementById('fatwa-title').value    = a.title || '';
     document.getElementById('fatwa-slug').value     = a.slug || '';
     document.getElementById('fatwa-excerpt').value  = a.excerpt || '';
@@ -96,30 +98,29 @@ async function editArticle(id) {
     document.getElementById('fatwa-form-title').textContent = 'Edit Fatwa';
     document.getElementById('fatwa-cancel').style.display = 'inline-block';
 
-    // Switch to fatawa tab
     document.querySelectorAll('.sidebar__btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t => t.style.display = 'none');
     document.querySelector('[data-tab="fatawa"]').classList.add('active');
     document.getElementById('tab-fatawa').style.display = 'block';
-
     window.scrollTo(0, 0);
   } catch (err) {
     alert('Could not load article for editing.');
   }
 }
 
-/* ─── Submit Fatwa (Create or Update) ─── */
+/* ─── Submit Fatwa ─── */
 document.getElementById('fatwa-submit').addEventListener('click', async () => {
-  const btn         = document.getElementById('fatwa-submit');
-  const msg         = document.getElementById('fatwa-msg');
-  const title       = document.getElementById('fatwa-title').value.trim();
-  const slug        = document.getElementById('fatwa-slug').value.trim();
-  const excerpt     = document.getElementById('fatwa-excerpt').value.trim();
-  const question    = document.getElementById('fatwa-question').value.trim();
-  const content     = document.getElementById('fatwa-content').value.trim();
-  const author      = document.getElementById('fatwa-author').value.trim() || 'Suhbat Ahl al-Athar';
-  const category_id = document.getElementById('fatwa-category').value;
-  const lang        = document.getElementById('fatwa-lang').value;
+  const btn          = document.getElementById('fatwa-submit');
+  const msg          = document.getElementById('fatwa-msg');
+  const fatwa_number = document.getElementById('fatwa-number').value;
+  const title        = document.getElementById('fatwa-title').value.trim();
+  const slug         = document.getElementById('fatwa-slug').value.trim();
+  const excerpt      = document.getElementById('fatwa-excerpt').value.trim();
+  const question     = document.getElementById('fatwa-question').value.trim();
+  const content      = document.getElementById('fatwa-content').value.trim();
+  const author       = document.getElementById('fatwa-author').value.trim() || 'Suhbat Ahl al-Athar';
+  const category_id  = document.getElementById('fatwa-category').value;
+  const lang         = document.getElementById('fatwa-lang').value;
 
   if (!title || !slug) { showMsg(msg, 'error', 'Title and slug are required.'); return; }
 
@@ -133,11 +134,15 @@ document.getElementById('fatwa-submit').addEventListener('click', async () => {
     const res = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, slug, excerpt, question, content, category_id: Number(category_id), author, lang })
+      body: JSON.stringify({
+        title, slug, excerpt, question, content,
+        category_id: Number(category_id), author, lang,
+        fatwa_number: fatwa_number ? Number(fatwa_number) : null
+      })
     });
     const data = await res.json();
     if (res.ok) {
-      showMsg(msg, 'success', editingArticleId ? '✅ Fatwa updated successfully!' : '✅ Fatwa published successfully!');
+      showMsg(msg, 'success', editingArticleId ? '✅ Fatwa updated!' : '✅ Fatwa published!');
       resetFatwaForm();
     } else { showMsg(msg, 'error', `Error: ${data.error}`); }
   } catch (err) { showMsg(msg, 'error', 'Could not connect to server.'); }
@@ -173,7 +178,7 @@ document.getElementById('video-submit').addEventListener('click', async () => {
     });
     const data = await res.json();
     if (res.ok) {
-      showMsg(msg, 'success', '✅ Video published successfully!');
+      showMsg(msg, 'success', '✅ Video published!');
       document.getElementById('video-title').value = '';
       document.getElementById('video-url').value = '';
       document.getElementById('video-desc').value = '';
@@ -198,7 +203,7 @@ async function loadList() {
       ? artData.articles.map(a => `
           <div class="list-item">
             <div>
-              <div class="list-item__title">${a.title}</div>
+              <div class="list-item__title">${a.fatwa_number ? `#${a.fatwa_number} — ` : ''}${a.title}</div>
               <div class="list-item__date">${a.lang === 'ar' ? '🇸🇦 Arabic' : '🇬🇧 English'} · ${a.category_name || 'Fatawa'} · ${new Date(a.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</div>
             </div>
             <div style="display:flex;gap:0.5rem;">

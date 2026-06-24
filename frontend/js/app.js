@@ -268,7 +268,10 @@ async function loadFatawa() {
 
     grid.innerHTML = articles.map(a => `
       <article class="fatwa-card" data-slug="${a.slug}">
-        <p class="fatwa-card__label">${a.category_name || t('fatawa_card_label')}</p>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+          <p class="fatwa-card__label">${a.category_name || t('fatawa_card_label')}</p>
+          ${a.fatwa_number ? `<span class="fatwa-card__number">#${a.fatwa_number}</span>` : ''}
+        </div>
         <h2 class="fatwa-card__title">${a.title}</h2>
         <p class="fatwa-card__excerpt">${a.excerpt || ''}</p>
         <div class="fatwa-card__footer">
@@ -299,7 +302,7 @@ async function renderFatwaArticle(slug) {
             <span class="back-btn__arrow">←</span> ${t('fatawa_back')}
           </button>
           <header class="article-header">
-            <p class="article-header__label">${a.category_name || t('fatawa_card_label')}</p>
+            <p class="article-header__label">${a.category_name || t('fatawa_card_label')}${a.fatwa_number ? ` · <span style="color:var(--gold);opacity:0.6;">#${a.fatwa_number}</span>` : ''}</p>
             <h1 class="article-header__title">${a.title}</h1>
             <p class="article-header__meta">${a.author} · ${formatDate(a.created_at)}</p>
           </header>

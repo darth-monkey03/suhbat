@@ -6,9 +6,9 @@ const getArticles = async (req, res) => {
 
   let query = supabase
     .from('articles')
-    .select(`id, title, slug, excerpt, author, created_at, lang, category_id, categories(name, slug)`)
+    .select(`id, title, slug, excerpt, author, created_at, lang, category_id, fatwa_number, categories(name, slug)`)
     .eq('published', 1)
-    .order('created_at', { ascending: false })
+    .order('fatwa_number', { ascending: true, nullsFirst: false })
     .range(offset, offset + Number(limit) - 1);
 
   if (category) {
@@ -83,12 +83,12 @@ const getArticleById = async (req, res) => {
 };
 
 const createArticle = async (req, res) => {
-  const { title, slug, excerpt, content, question, category_id, author, lang } = req.body;
+  const { title, slug, excerpt, content, question, category_id, author, lang, fatwa_number } = req.body;
   if (!title || !slug) return res.status(400).json({ error: 'title and slug are required' });
 
   const { data, error } = await supabase
     .from('articles')
-    .insert([{ title, slug, excerpt, content, question, category_id, author: author || 'Suhbat Ahl al-Athar', lang: lang || 'en' }])
+    .insert([{ title, slug, excerpt, content, question, category_id, author: author || 'Suhbat Ahl al-Athar', lang: lang || 'en', fatwa_number: fatwa_number || null }])
     .select();
 
   if (error) return res.status(400).json({ error: error.message });
@@ -96,10 +96,10 @@ const createArticle = async (req, res) => {
 };
 
 const updateArticle = async (req, res) => {
-  const { title, slug, excerpt, content, question, category_id, author, published, lang } = req.body;
+  const { title, slug, excerpt, content, question, category_id, author, published, lang, fatwa_number } = req.body;
   const { error } = await supabase
     .from('articles')
-    .update({ title, slug, excerpt, content, question, category_id, author, published: published ?? 1, lang: lang || 'en', updated_at: new Date().toISOString() })
+    .update({ title, slug, excerpt, content, question, category_id, author, published: published ?? 1, lang: lang || 'en', updated_at: new Date().toISOString(), fatwa_number: fatwa_number || null })
     .eq('id', req.params.id);
 
   if (error) return res.status(400).json({ error: error.message });
