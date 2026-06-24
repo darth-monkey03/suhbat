@@ -62,19 +62,20 @@ document.getElementById('fatwa-submit').addEventListener('click', async () => {
   const title       = document.getElementById('fatwa-title').value.trim();
   const slug        = document.getElementById('fatwa-slug').value.trim();
   const excerpt     = document.getElementById('fatwa-excerpt').value.trim();
+  const question    = document.getElementById('fatwa-question').value.trim();
   const content     = document.getElementById('fatwa-content').value.trim();
   const author      = document.getElementById('fatwa-author').value.trim() || 'Suhbat Ahl al-Athar';
   const category_id = document.getElementById('fatwa-category').value;
   const lang        = document.getElementById('fatwa-lang').value;
 
-  if (!title || !slug || !content) { showMsg(msg, 'error', 'Title, slug, and content are required.'); return; }
+  if (!title || !slug) { showMsg(msg, 'error', 'Title and slug are required.'); return; }
 
   btn.disabled = true; btn.textContent = 'Publishing...';
   try {
     const res = await fetch(`${API}/articles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, slug, excerpt, content, category_id: Number(category_id), author, lang })
+      body: JSON.stringify({ title, slug, excerpt, question, content, category_id: Number(category_id), author, lang })
     });
     const data = await res.json();
     if (res.ok) {
@@ -82,6 +83,7 @@ document.getElementById('fatwa-submit').addEventListener('click', async () => {
       document.getElementById('fatwa-title').value = '';
       document.getElementById('fatwa-slug').value = '';
       document.getElementById('fatwa-excerpt').value = '';
+      document.getElementById('fatwa-question').value = '';
       document.getElementById('fatwa-content').value = '';
     } else { showMsg(msg, 'error', `Error: ${data.error}`); }
   } catch (err) { showMsg(msg, 'error', 'Could not connect to server.'); }

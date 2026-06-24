@@ -67,12 +67,12 @@ const getArticleBySlug = async (req, res) => {
 };
 
 const createArticle = async (req, res) => {
-  const { title, slug, excerpt, content, category_id, author, lang } = req.body;
-  if (!title || !content || !slug) return res.status(400).json({ error: 'title, slug, and content are required' });
+  const { title, slug, excerpt, content, question, category_id, author, lang } = req.body;
+  if (!title || !slug) return res.status(400).json({ error: 'title and slug are required' });
 
   const { data, error } = await supabase
     .from('articles')
-    .insert([{ title, slug, excerpt, content, category_id, author: author || 'Suhbat Ahl al-Athar', lang: lang || 'en' }])
+    .insert([{ title, slug, excerpt, content, question, category_id, author: author || 'Suhbat Ahl al-Athar', lang: lang || 'en' }])
     .select();
 
   if (error) return res.status(400).json({ error: error.message });
@@ -80,10 +80,10 @@ const createArticle = async (req, res) => {
 };
 
 const updateArticle = async (req, res) => {
-  const { title, slug, excerpt, content, category_id, author, published, lang } = req.body;
+  const { title, slug, excerpt, content, question, category_id, author, published, lang } = req.body;
   const { error } = await supabase
     .from('articles')
-    .update({ title, slug, excerpt, content, category_id, author, published: published ?? 1, lang: lang || 'en', updated_at: new Date().toISOString() })
+    .update({ title, slug, excerpt, content, question, category_id, author, published: published ?? 1, lang: lang || 'en', updated_at: new Date().toISOString() })
     .eq('id', req.params.id);
 
   if (error) return res.status(400).json({ error: error.message });

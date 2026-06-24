@@ -19,6 +19,8 @@ const LANG = {
     fatawa_card_label: 'Fatwa',
     fatawa_read: 'Read',
     fatawa_back: '← Back to Fatawa',
+    fatawa_question: 'Question',
+    fatawa_answer: 'Answer',
     videos_label: 'Lectures & Reminders',
     videos_title: 'Videos',
     videos_subtitle: 'Watch our latest lectures and reminders',
@@ -54,6 +56,8 @@ const LANG = {
     fatawa_card_label: 'فتوى',
     fatawa_read: 'اقرأ',
     fatawa_back: '← العودة إلى الفتاوى',
+    fatawa_question: 'السؤال',
+    fatawa_answer: 'الجواب',
     videos_label: 'المحاضرات والتذكيرات',
     videos_title: 'المقاطع',
     videos_subtitle: 'شاهد أحدث محاضراتنا وتذكيراتنا',
@@ -256,7 +260,6 @@ async function loadFatawa() {
   try {
     const params = new URLSearchParams({ page: fatawa_page, limit: 9 });
     if (fatawa_cat) params.set('category', fatawa_cat);
-    else params.set('category', 'fatawa');
     params.set('lang', currentLang);
     if (fatawa_search) params.set('search', fatawa_search);
     const { articles, pagination } = await apiFetch(`/articles?${params}`);
@@ -300,7 +303,16 @@ async function renderFatwaArticle(slug) {
             <h1 class="article-header__title">${a.title}</h1>
             <p class="article-header__meta">${a.author} · ${formatDate(a.created_at)}</p>
           </header>
-          <div class="article-body">${a.content}</div>
+          ${a.question ? `
+          <div class="fatwa-question">
+            <div class="fatwa-question__label">${t('fatawa_question')}</div>
+            <div class="fatwa-question__text">${a.question}</div>
+          </div>` : ''}
+          ${a.content ? `
+          <div class="fatwa-answer">
+            <div class="fatwa-answer__label">${t('fatawa_answer')}</div>
+            <div class="article-body">${a.content}</div>
+          </div>` : ''}
         </div>
       </div>`;
     $('back-btn').addEventListener('click', () => navigate('fatawa'));
