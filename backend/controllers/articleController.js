@@ -1,75 +1,95 @@
-const { getDb } = require('../db/database');
+const { supabase } = require('../db/database');
 
 const getArticles = async (req, res) => {
-  const db = await getDb();
   const { category, search, page = 1, limit = 10 } = req.query;
   const offset = (page - 1) * limit;
 
-  let query = `
-    SELECT a.id, a.title, a.slug, a.excerpt, a.author, a.created_at,
-           c.name as category_name, c.slug as category_slug
-    FROM articles a
-    LEFT JOIN categories c ON a.category_id = c.id
-    WHERE a.published = 1
-  `;
-  const params = [];
+  let query = supabase
+    .from('articles')
+    .select(`id, title, slug, excerpt, author, created_at, categories(name, slug)`)
+    .eq('published', 1)
+    .order('created_at', { ascending: false })
+    .range(offset, offset + Number(limit) - 1);
 
-  if (category) { query += ` AND c.slug = ?`; params.push(category); }
-  if (search) {
-    query += ` AND (a.title LIKE ? OR a.excerpt LIKE ? OR a.content LIKE ?)`;
-    const t = `%${search}%`; params.push(t, t, t);
+  if (category) {
+    const { data: cat } = await supabase.from('categories').select('id').eq('slug', category).single();
+    if (cat) query = query.eq('category_id', cat.id);
   }
-  query += ` ORDER BY a.created_at DESC LIMIT ? OFFSET ?`;
-  params.push(Number(limit), Number(offset));
 
-  const articles = db.prepare(query).all(...params);
-
-  let countQuery = `SELECT COUNT(*) as total FROM articles a LEFT JOIN categories c ON a.category_id = c.id WHERE a.published = 1`;
-  const countParams = [];
-  if (category) { countQuery += ` AND c.slug = ?`; countParams.push(category); }
   if (search) {
-    countQuery += ` AND (a.title LIKE ? OR a.excerpt LIKE ? OR a.content LIKE ?)`;
-    const t = `%${search}%`; countParams.push(t, t, t);
+    query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%,content.ilike.%${search}%`);
   }
-  const countRow = db.prepare(countQuery).get(...countParams);
-  const total = countRow ? countRow.total : 0;
 
-  res.json({ articles, pagination: { total, page: Number(page), limit: Number(limit), pages: Math.ceil(total / limit) } });
+  const { data: articles, error, count } = await query;
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  const mapped = (articles || []).map(a => ({
+    ...a,
+    category_name: a.categories?.name,
+    category_slug: a.categories?.slug
+  }));
+
+  const { count: total } = await supabase
+    .from('articles')
+    .select('id', { count: 'exact', head: true })
+    .eq('published', 1);
+
+  res.json({
+    articles: mapped,
+    pagination: {
+      total: total || 0,
+      page: Number(page),
+      limit: Number(limit),
+      pages: Math.ceil((total || 0) / limit)
+    }
+  });
 };
 
 const getArticleBySlug = async (req, res) => {
-  const db = await getDb();
-  const article = db.prepare(`
-    SELECT a.*, c.name as category_name, c.slug as category_slug
-    FROM articles a LEFT JOIN categories c ON a.category_id = c.id
-    WHERE a.slug = ? AND a.published = 1
-  `).get(req.params.slug);
-  if (!article) return res.status(404).json({ error: 'Article not found' });
-  res.json(article);
+  const { data: article, error } = await supabase
+    .from('articles')
+    .select(`*, categories(name, slug)`)
+    .eq('slug', req.params.slug)
+    .eq('published', 1)
+    .single();
+
+  if (error || !article) return res.status(404).json({ error: 'Article not found' });
+
+  res.json({
+    ...article,
+    category_name: article.categories?.name,
+    category_slug: article.categories?.slug
+  });
 };
 
 const createArticle = async (req, res) => {
-  const db = await getDb();
   const { title, slug, excerpt, content, category_id, author } = req.body;
   if (!title || !content || !slug) return res.status(400).json({ error: 'title, slug, and content are required' });
-  try {
-    const result = db.prepare(`INSERT INTO articles (title, slug, excerpt, content, category_id, author) VALUES (?, ?, ?, ?, ?, ?)`).run(title, slug, excerpt, content, category_id, author || 'Suhbat Ahl al-Athar');
-    res.status(201).json({ id: result.lastInsertRowid, slug });
-  } catch (err) { res.status(400).json({ error: err.message }); }
+
+  const { data, error } = await supabase
+    .from('articles')
+    .insert([{ title, slug, excerpt, content, category_id, author: author || 'Suhbat Ahl al-Athar' }])
+    .select();
+
+  if (error) return res.status(400).json({ error: error.message });
+  res.status(201).json({ id: data[0].id, slug });
 };
 
 const updateArticle = async (req, res) => {
-  const db = await getDb();
   const { title, slug, excerpt, content, category_id, author, published } = req.body;
-  try {
-    db.prepare(`UPDATE articles SET title=?, slug=?, excerpt=?, content=?, category_id=?, author=?, published=?, updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(title, slug, excerpt, content, category_id, author, published ?? 1, req.params.id);
-    res.json({ success: true });
-  } catch (err) { res.status(400).json({ error: err.message }); }
+  const { error } = await supabase
+    .from('articles')
+    .update({ title, slug, excerpt, content, category_id, author, published: published ?? 1, updated_at: new Date().toISOString() })
+    .eq('id', req.params.id);
+
+  if (error) return res.status(400).json({ error: error.message });
+  res.json({ success: true });
 };
 
 const deleteArticle = async (req, res) => {
-  const db = await getDb();
-  db.prepare('DELETE FROM articles WHERE id = ?').run(req.params.id);
+  const { error } = await supabase.from('articles').delete().eq('id', req.params.id);
+  if (error) return res.status(400).json({ error: error.message });
   res.json({ success: true });
 };
 

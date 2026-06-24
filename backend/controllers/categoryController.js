@@ -1,27 +1,26 @@
-const { getDb } = require('../db/database');
+const { supabase } = require('../db/database');
 
 const getCategories = async (req, res) => {
-  const db = await getDb();
-  const categories = db.prepare(`
-    SELECT c.*, COUNT(a.id) as article_count
-    FROM categories c
-    LEFT JOIN articles a ON a.category_id = c.id AND a.published = 1
-    GROUP BY c.id
-    ORDER BY c.name ASC
-  `).all();
+  const { data: categories, error } = await supabase
+    .from('categories')
+    .select('*')
+    .order('name', { ascending: true });
+
+  if (error) return res.status(500).json({ error: error.message });
   res.json(categories);
 };
 
 const createCategory = async (req, res) => {
-  const db = await getDb();
   const { name, slug, description } = req.body;
   if (!name || !slug) return res.status(400).json({ error: 'name and slug required' });
-  try {
-    const result = db.prepare('INSERT INTO categories (name, slug, description) VALUES (?, ?, ?)').run(name, slug, description);
-    res.status(201).json({ id: result.lastInsertRowid });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+
+  const { data, error } = await supabase
+    .from('categories')
+    .insert([{ name, slug, description }])
+    .select();
+
+  if (error) return res.status(400).json({ error: error.message });
+  res.status(201).json({ id: data[0].id });
 };
 
 module.exports = { getCategories, createCategory };
