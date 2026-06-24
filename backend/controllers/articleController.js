@@ -1,12 +1,12 @@
 const { supabase } = require('../db/database');
 
 const getArticles = async (req, res) => {
-  const { category, search, page = 1, limit = 10 } = req.query;
+  const { category, search, page = 1, limit = 10, lang } = req.query;
   const offset = (page - 1) * limit;
 
   let query = supabase
     .from('articles')
-    .select(`id, title, slug, excerpt, author, created_at, categories(name, slug)`)
+    .select(`id, title, slug, excerpt, author, created_at, lang, categories(name, slug)`)
     .eq('published', 1)
     .order('created_at', { ascending: false })
     .range(offset, offset + Number(limit) - 1);
@@ -20,8 +20,11 @@ const getArticles = async (req, res) => {
     query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%,content.ilike.%${search}%`);
   }
 
-  const { data: articles, error, count } = await query;
+  if (lang) {
+    query = query.eq('lang', lang);
+  }
 
+  const { data: articles, error } = await query;
   if (error) return res.status(500).json({ error: error.message });
 
   const mapped = (articles || []).map(a => ({
@@ -64,12 +67,12 @@ const getArticleBySlug = async (req, res) => {
 };
 
 const createArticle = async (req, res) => {
-  const { title, slug, excerpt, content, category_id, author } = req.body;
+  const { title, slug, excerpt, content, category_id, author, lang } = req.body;
   if (!title || !content || !slug) return res.status(400).json({ error: 'title, slug, and content are required' });
 
   const { data, error } = await supabase
     .from('articles')
-    .insert([{ title, slug, excerpt, content, category_id, author: author || 'Suhbat Ahl al-Athar' }])
+    .insert([{ title, slug, excerpt, content, category_id, author: author || 'Suhbat Ahl al-Athar', lang: lang || 'en' }])
     .select();
 
   if (error) return res.status(400).json({ error: error.message });
@@ -77,10 +80,10 @@ const createArticle = async (req, res) => {
 };
 
 const updateArticle = async (req, res) => {
-  const { title, slug, excerpt, content, category_id, author, published } = req.body;
+  const { title, slug, excerpt, content, category_id, author, published, lang } = req.body;
   const { error } = await supabase
     .from('articles')
-    .update({ title, slug, excerpt, content, category_id, author, published: published ?? 1, updated_at: new Date().toISOString() })
+    .update({ title, slug, excerpt, content, category_id, author, published: published ?? 1, lang: lang || 'en', updated_at: new Date().toISOString() })
     .eq('id', req.params.id);
 
   if (error) return res.status(400).json({ error: error.message });

@@ -65,6 +65,7 @@ document.getElementById('fatwa-submit').addEventListener('click', async () => {
   const content     = document.getElementById('fatwa-content').value.trim();
   const author      = document.getElementById('fatwa-author').value.trim() || 'Suhbat Ahl al-Athar';
   const category_id = document.getElementById('fatwa-category').value;
+  const lang        = document.getElementById('fatwa-lang').value;
 
   if (!title || !slug || !content) { showMsg(msg, 'error', 'Title, slug, and content are required.'); return; }
 
@@ -73,7 +74,7 @@ document.getElementById('fatwa-submit').addEventListener('click', async () => {
     const res = await fetch(`${API}/articles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, slug, excerpt, content, category_id: Number(category_id), author })
+      body: JSON.stringify({ title, slug, excerpt, content, category_id: Number(category_id), author, lang })
     });
     const data = await res.json();
     if (res.ok) {
@@ -96,6 +97,7 @@ document.getElementById('video-submit').addEventListener('click', async () => {
   const desc        = document.getElementById('video-desc').value.trim();
   const author      = document.getElementById('video-author').value.trim() || 'Suhbat Ahl al-Athar';
   const category_id = document.getElementById('video-category').value;
+  const lang        = document.getElementById('video-lang').value;
 
   if (!title || !url) { showMsg(msg, 'error', 'Title and YouTube URL are required.'); return; }
 
@@ -104,7 +106,7 @@ document.getElementById('video-submit').addEventListener('click', async () => {
     const res = await fetch(`${API}/videos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, youtube_url: url, description: desc, category_id: Number(category_id), author })
+      body: JSON.stringify({ title, youtube_url: url, description: desc, category_id: Number(category_id), author, lang })
     });
     const data = await res.json();
     if (res.ok) {
@@ -134,7 +136,7 @@ async function loadList() {
           <div class="list-item">
             <div>
               <div class="list-item__title">${a.title}</div>
-              <div class="list-item__date">${a.category_name || 'Fatawa'} · ${new Date(a.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</div>
+              <div class="list-item__date">${a.lang === 'ar' ? '🇸🇦 Arabic' : '🇬🇧 English'} · ${a.category_name || 'Fatawa'} · ${new Date(a.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</div>
             </div>
             <button class="list-item__delete" data-type="article" data-id="${a.id}">Delete</button>
           </div>`).join('')
@@ -145,7 +147,7 @@ async function loadList() {
           <div class="list-item">
             <div>
               <div class="list-item__title">${v.title}</div>
-              <div class="list-item__date">${new Date(v.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</div>
+              <div class="list-item__date">${v.lang === 'ar' ? '🇸🇦 Arabic' : '🇬🇧 English'} · ${new Date(v.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</div>
             </div>
             <button class="list-item__delete" data-type="video" data-id="${v.id}">Delete</button>
           </div>`).join('')

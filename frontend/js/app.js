@@ -257,6 +257,7 @@ async function loadFatawa() {
     const params = new URLSearchParams({ page: fatawa_page, limit: 9 });
     if (fatawa_cat) params.set('category', fatawa_cat);
     else params.set('category', 'fatawa');
+    params.set('lang', currentLang);
     if (fatawa_search) params.set('search', fatawa_search);
     const { articles, pagination } = await apiFetch(`/articles?${params}`);
 
@@ -370,6 +371,7 @@ async function loadVideos() {
   try {
     const params = new URLSearchParams({ page: videos_page, limit: 9 });
     if (videos_cat) params.set('category', videos_cat);
+    params.set('lang', currentLang);
     if (videos_search) params.set('search', videos_search);
     const { videos, pagination } = await apiFetch(`/videos?${params}`);
 

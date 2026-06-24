@@ -1,7 +1,7 @@
 const { supabase } = require('../db/database');
 
 const getVideos = async (req, res) => {
-  const { page = 1, limit = 12, search, category } = req.query;
+  const { page = 1, limit = 12, search, category, lang } = req.query;
   const offset = (page - 1) * limit;
 
   let query = supabase
@@ -18,6 +18,10 @@ const getVideos = async (req, res) => {
 
   if (search) {
     query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
+  }
+
+  if (lang) {
+    query = query.eq('lang', lang);
   }
 
   const { data: videos, error } = await query;
@@ -52,12 +56,12 @@ const getVideo = async (req, res) => {
 };
 
 const createVideo = async (req, res) => {
-  const { title, youtube_url, description, category_id, author } = req.body;
+  const { title, youtube_url, description, category_id, author, lang } = req.body;
   if (!title || !youtube_url) return res.status(400).json({ error: 'title and youtube_url required' });
 
   const { data, error } = await supabase
     .from('videos')
-    .insert([{ title, youtube_url, description, category_id, author: author || 'Suhbat Ahl al-Athar' }])
+    .insert([{ title, youtube_url, description, category_id, author: author || 'Suhbat Ahl al-Athar', lang: lang || 'en' }])
     .select();
 
   if (error) return res.status(400).json({ error: error.message });
@@ -65,10 +69,10 @@ const createVideo = async (req, res) => {
 };
 
 const updateVideo = async (req, res) => {
-  const { title, youtube_url, description, category_id, author, published } = req.body;
+  const { title, youtube_url, description, category_id, author, published, lang } = req.body;
   const { error } = await supabase
     .from('videos')
-    .update({ title, youtube_url, description, category_id, author, published: published ?? 1 })
+    .update({ title, youtube_url, description, category_id, author, published: published ?? 1, lang: lang || 'en' })
     .eq('id', req.params.id);
 
   if (error) return res.status(400).json({ error: error.message });
