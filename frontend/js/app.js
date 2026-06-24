@@ -7,8 +7,8 @@ const LANG = {
     welcome_name_en: 'Suhbat Ahl al-Athar',
     welcome_name_ar: 'صحبة أهل الأثر',
     welcome_subtitle: 'Lectures · Reminders · Knowledge',
-    welcome_quote: 'Seeking knowledge is an obligation upon every Muslim.',
-    welcome_source: '— The Prophet Muhammad ﷺ · Ibn Majah',
+    welcome_quote: 'قُل رَّبِّ زِدۡنِي عِلۡمٗا',
+    welcome_source: '— Surah Ta-Ha 20:114',
     welcome_btn_fatawa: 'Read Fatawa',
     welcome_btn_videos: 'Watch Videos',
     fatawa_label: 'Knowledge & Rulings',
@@ -17,6 +17,7 @@ const LANG = {
     fatawa_search: 'Search Fatawa…',
     fatawa_all: 'All Fatawa',
     fatawa_card_label: 'Fatwa',
+    fatawa_number_label: 'Fatwa No.',
     fatawa_read: 'Read',
     fatawa_back: '← Back to Fatawa',
     fatawa_question: 'Question',
@@ -44,8 +45,8 @@ const LANG = {
     welcome_name_en: 'صحبة أهل الأثر',
     welcome_name_ar: 'Suhbat Ahl al-Athar',
     welcome_subtitle: 'محاضرات · تذكيرات · علم',
-    welcome_quote: 'طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ',
-    welcome_source: '— النبي محمد ﷺ · ابن ماجه',
+    welcome_quote: 'قُل رَّبِّ زِدۡنِي عِلۡمٗا',
+    welcome_source: '— سورة طه ١١٤',
     welcome_btn_fatawa: 'اقرأ الفتاوى',
     welcome_btn_videos: 'شاهد المقاطع',
     fatawa_label: 'العلم والأحكام',
@@ -54,6 +55,7 @@ const LANG = {
     fatawa_search: 'ابحث في الفتاوى…',
     fatawa_all: 'جميع الفتاوى',
     fatawa_card_label: 'فتوى',
+    fatawa_number_label: 'فتوى رقم',
     fatawa_read: 'اقرأ',
     fatawa_back: '← العودة إلى الفتاوى',
     fatawa_question: 'السؤال',
@@ -186,7 +188,7 @@ function renderWelcome() {
         <span class="welcome__divider-diamond"></span>
         <span class="welcome__divider-line"></span>
       </div>
-      <blockquote class="welcome__quote" dir="${currentLang === 'ar' ? 'rtl' : 'ltr'}" style="font-family:${currentLang === 'ar' ? "'Amiri',serif" : 'inherit'}">
+      <blockquote class="welcome__quote" dir="rtl" style="font-family:'Amiri',serif">
         ${t('welcome_quote')}
       </blockquote>
       <p class="welcome__quote-source">${t('welcome_source')}</p>
@@ -270,10 +272,9 @@ async function loadFatawa() {
       <article class="fatwa-card" data-slug="${a.slug}">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
           <p class="fatwa-card__label">${a.category_name || t('fatawa_card_label')}</p>
-          ${a.fatwa_number ? `<span class="fatwa-card__number">#${a.fatwa_number}</span>` : ''}
+          ${a.fatwa_number ? `<span class="fatwa-card__number">${t('fatawa_number_label')} ${a.fatwa_number}</span>` : ''}
         </div>
         <h2 class="fatwa-card__title">${a.title}</h2>
-        <p class="fatwa-card__excerpt">${a.excerpt || ''}</p>
         <div class="fatwa-card__footer">
           <span class="fatwa-card__date">${formatDate(a.created_at)}</span>
           <span class="fatwa-card__read">${t('fatawa_read')} <span class="fatwa-card__arrow">→</span></span>
@@ -302,7 +303,7 @@ async function renderFatwaArticle(slug) {
             <span class="back-btn__arrow">←</span> ${t('fatawa_back')}
           </button>
           <header class="article-header">
-            <p class="article-header__label">${a.category_name || t('fatawa_card_label')}${a.fatwa_number ? ` · <span style="color:var(--gold);opacity:0.6;">#${a.fatwa_number}</span>` : ''}</p>
+            <p class="article-header__label">${a.category_name || t('fatawa_card_label')}${a.fatwa_number ? ` · <span style="color:var(--gold);opacity:0.6;">${t('fatawa_number_label')} ${a.fatwa_number}</span>` : ''}</p>
             <h1 class="article-header__title">${a.title}</h1>
             <p class="article-header__meta">${a.author} · ${formatDate(a.created_at)}</p>
           </header>
