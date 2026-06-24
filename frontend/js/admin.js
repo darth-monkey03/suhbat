@@ -1,4 +1,4 @@
-const API = 'https://suhbat.one/api';
+const API = 'https://suhbat.onrender.com/api';
 const PASSWORD = 'Linde0311';
 
 const loginPage  = document.getElementById('login-page');
