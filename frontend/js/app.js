@@ -7,7 +7,7 @@ const LANG = {
     welcome_name_en: 'Suhbat Ahl al-Athar',
     welcome_name_ar: 'صحبة أهل الأثر',
     welcome_subtitle: 'Lectures · Reminders · Knowledge',
-    welcome_quote: 'قُل رَّبِّ زِدۡنِي عِلۡمٗا',
+    welcome_quote: 'وَقُل رَّبِّ زِدْنِى عِلْمًۭا ١١٤',
     welcome_source: '— Surah Ta-Ha 20:114',
     welcome_btn_fatawa: 'Read Fatawa',
     welcome_btn_videos: 'Watch Videos',
@@ -45,8 +45,8 @@ const LANG = {
     welcome_name_en: 'صحبة أهل الأثر',
     welcome_name_ar: 'Suhbat Ahl al-Athar',
     welcome_subtitle: 'محاضرات · تذكيرات · علم',
-    welcome_quote: 'قُل رَّبِّ زِدۡنِي عِلۡمٗا',
-    welcome_source: '— سورة طه ١١٤',
+    welcome_quote: 'وَقُل رَّبِّ زِدْنِى عِلْمًۭا ١١٤',
+    welcome_source: '— سورة طه',
     welcome_btn_fatawa: 'اقرأ الفتاوى',
     welcome_btn_videos: 'شاهد المقاطع',
     fatawa_label: 'العلم والأحكام',
@@ -97,13 +97,13 @@ const VIDEO_CATS = [
 ];
 
 const CAT_MAP = {
-  'Fatawa':    { en: 'Fatawa',   ar: 'فتاوى'   },
-  'Aqeedah':   { en: 'Aqeedah',  ar: 'عقيدة'   },
-  'Tafseer':   { en: 'Tafseer',  ar: 'تفسير'   },
-  'Hadith':    { en: 'Hadith',   ar: 'حديث'    },
-  'Fiqh':      { en: 'Fiqh',     ar: 'فقه'     },
-  'Lectures':  { en: 'Lectures', ar: 'محاضرات' },
-  'Reminders': { en: 'Reminders',ar: 'تذكيرات' },
+  'Fatawa':    { en: 'Fatawa',    ar: 'فتاوى'   },
+  'Aqeedah':   { en: 'Aqeedah',   ar: 'عقيدة'   },
+  'Tafseer':   { en: 'Tafseer',   ar: 'تفسير'   },
+  'Hadith':    { en: 'Hadith',    ar: 'حديث'    },
+  'Fiqh':      { en: 'Fiqh',      ar: 'فقه'     },
+  'Lectures':  { en: 'Lectures',  ar: 'محاضرات' },
+  'Reminders': { en: 'Reminders', ar: 'تذكيرات' },
 };
 
 /* ─── State ─── */
