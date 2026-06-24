@@ -8,6 +8,8 @@ const loginInput = document.getElementById('login-password');
 const loginError = document.getElementById('login-error');
 const logoutBtn  = document.getElementById('logout-btn');
 
+let editingArticleId = null;
+
 function checkSession() {
   if (sessionStorage.getItem('admin') === 'true') {
     loginPage.style.display = 'none';
@@ -46,16 +48,67 @@ document.querySelectorAll('.sidebar__btn').forEach(btn => {
     const tab = document.getElementById(`tab-${btn.dataset.tab}`);
     if (tab) tab.style.display = 'block';
     if (btn.dataset.tab === 'list') loadList();
+    if (btn.dataset.tab === 'fatawa') resetFatwaForm();
   });
 });
 
 /* ─── Auto slug ─── */
 document.getElementById('fatwa-title').addEventListener('input', e => {
-  document.getElementById('fatwa-slug').value = e.target.value
-    .toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+  if (!editingArticleId) {
+    document.getElementById('fatwa-slug').value = e.target.value
+      .toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+  }
 });
 
-/* ─── Submit Fatwa ─── */
+/* ─── Reset Fatwa Form ─── */
+function resetFatwaForm() {
+  editingArticleId = null;
+  document.getElementById('fatwa-title').value = '';
+  document.getElementById('fatwa-slug').value = '';
+  document.getElementById('fatwa-excerpt').value = '';
+  document.getElementById('fatwa-question').value = '';
+  document.getElementById('fatwa-content').value = '';
+  document.getElementById('fatwa-author').value = 'Suhbat Ahl al-Athar';
+  document.getElementById('fatwa-submit').textContent = 'Publish Fatwa';
+  document.getElementById('fatwa-form-title').textContent = 'Add New Fatwa';
+  const cancelBtn = document.getElementById('fatwa-cancel');
+  if (cancelBtn) cancelBtn.style.display = 'none';
+}
+
+/* ─── Fill Fatwa Form for Editing ─── */
+async function editArticle(id) {
+  try {
+    const res = await fetch(`${API}/articles/id/${id}`);
+    const a = await res.json();
+
+    editingArticleId = id;
+    document.getElementById('fatwa-title').value    = a.title || '';
+    document.getElementById('fatwa-slug').value     = a.slug || '';
+    document.getElementById('fatwa-excerpt').value  = a.excerpt || '';
+    document.getElementById('fatwa-question').value = a.question || '';
+    document.getElementById('fatwa-content').value  = a.content || '';
+    document.getElementById('fatwa-author').value   = a.author || 'Suhbat Ahl al-Athar';
+
+    if (a.lang) document.getElementById('fatwa-lang').value = a.lang;
+    if (a.category_id) document.getElementById('fatwa-category').value = a.category_id;
+
+    document.getElementById('fatwa-submit').textContent = 'Save Changes';
+    document.getElementById('fatwa-form-title').textContent = 'Edit Fatwa';
+    document.getElementById('fatwa-cancel').style.display = 'inline-block';
+
+    // Switch to fatawa tab
+    document.querySelectorAll('.sidebar__btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.style.display = 'none');
+    document.querySelector('[data-tab="fatawa"]').classList.add('active');
+    document.getElementById('tab-fatawa').style.display = 'block';
+
+    window.scrollTo(0, 0);
+  } catch (err) {
+    alert('Could not load article for editing.');
+  }
+}
+
+/* ─── Submit Fatwa (Create or Update) ─── */
 document.getElementById('fatwa-submit').addEventListener('click', async () => {
   const btn         = document.getElementById('fatwa-submit');
   const msg         = document.getElementById('fatwa-msg');
@@ -70,24 +123,32 @@ document.getElementById('fatwa-submit').addEventListener('click', async () => {
 
   if (!title || !slug) { showMsg(msg, 'error', 'Title and slug are required.'); return; }
 
-  btn.disabled = true; btn.textContent = 'Publishing...';
+  btn.disabled = true;
+  btn.textContent = editingArticleId ? 'Saving...' : 'Publishing...';
+
   try {
-    const res = await fetch(`${API}/articles`, {
-      method: 'POST',
+    const url    = editingArticleId ? `${API}/articles/${editingArticleId}` : `${API}/articles`;
+    const method = editingArticleId ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, slug, excerpt, question, content, category_id: Number(category_id), author, lang })
     });
     const data = await res.json();
     if (res.ok) {
-      showMsg(msg, 'success', '✅ Fatwa published successfully!');
-      document.getElementById('fatwa-title').value = '';
-      document.getElementById('fatwa-slug').value = '';
-      document.getElementById('fatwa-excerpt').value = '';
-      document.getElementById('fatwa-question').value = '';
-      document.getElementById('fatwa-content').value = '';
+      showMsg(msg, 'success', editingArticleId ? '✅ Fatwa updated successfully!' : '✅ Fatwa published successfully!');
+      resetFatwaForm();
     } else { showMsg(msg, 'error', `Error: ${data.error}`); }
   } catch (err) { showMsg(msg, 'error', 'Could not connect to server.'); }
-  btn.disabled = false; btn.textContent = 'Publish Fatwa';
+
+  btn.disabled = false;
+  btn.textContent = editingArticleId ? 'Save Changes' : 'Publish Fatwa';
+});
+
+/* ─── Cancel Edit ─── */
+document.addEventListener('click', e => {
+  if (e.target.id === 'fatwa-cancel') resetFatwaForm();
 });
 
 /* ─── Submit Video ─── */
@@ -140,7 +201,10 @@ async function loadList() {
               <div class="list-item__title">${a.title}</div>
               <div class="list-item__date">${a.lang === 'ar' ? '🇸🇦 Arabic' : '🇬🇧 English'} · ${a.category_name || 'Fatawa'} · ${new Date(a.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</div>
             </div>
-            <button class="list-item__delete" data-type="article" data-id="${a.id}">Delete</button>
+            <div style="display:flex;gap:0.5rem;">
+              <button class="list-item__edit" data-id="${a.id}">Edit</button>
+              <button class="list-item__delete" data-type="article" data-id="${a.id}">Delete</button>
+            </div>
           </div>`).join('')
       : '<p style="color:#999;font-size:0.9rem;">No Fatawa yet.</p>';
 
@@ -154,6 +218,10 @@ async function loadList() {
             <button class="list-item__delete" data-type="video" data-id="${v.id}">Delete</button>
           </div>`).join('')
       : '<p style="color:#999;font-size:0.9rem;">No videos yet.</p>';
+
+    document.querySelectorAll('.list-item__edit').forEach(btn => {
+      btn.addEventListener('click', () => editArticle(btn.dataset.id));
+    });
 
     document.querySelectorAll('.list-item__delete').forEach(btn => {
       btn.addEventListener('click', async () => {

@@ -6,7 +6,7 @@ const getArticles = async (req, res) => {
 
   let query = supabase
     .from('articles')
-    .select(`id, title, slug, excerpt, author, created_at, lang, categories(name, slug)`)
+    .select(`id, title, slug, excerpt, author, created_at, lang, category_id, categories(name, slug)`)
     .eq('published', 1)
     .order('created_at', { ascending: false })
     .range(offset, offset + Number(limit) - 1);
@@ -66,6 +66,22 @@ const getArticleBySlug = async (req, res) => {
   });
 };
 
+const getArticleById = async (req, res) => {
+  const { data: article, error } = await supabase
+    .from('articles')
+    .select(`*, categories(name, slug)`)
+    .eq('id', req.params.id)
+    .single();
+
+  if (error || !article) return res.status(404).json({ error: 'Article not found' });
+
+  res.json({
+    ...article,
+    category_name: article.categories?.name,
+    category_slug: article.categories?.slug
+  });
+};
+
 const createArticle = async (req, res) => {
   const { title, slug, excerpt, content, question, category_id, author, lang } = req.body;
   if (!title || !slug) return res.status(400).json({ error: 'title and slug are required' });
@@ -96,4 +112,4 @@ const deleteArticle = async (req, res) => {
   res.json({ success: true });
 };
 
-module.exports = { getArticles, getArticleBySlug, createArticle, updateArticle, deleteArticle };
+module.exports = { getArticles, getArticleBySlug, getArticleById, createArticle, updateArticle, deleteArticle };

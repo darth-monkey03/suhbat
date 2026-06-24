@@ -134,3 +134,17 @@ body { font-family: var(--font); background: var(--parchment); color: var(--ink)
   .admin-main { margin-left: 0; padding: 1.5rem; }
   .admin-page { flex-direction: column; }
 }
+/* ─── Edit & Cancel Buttons ─── */
+.list-item__edit {
+  background: none; border: 1px solid rgba(201,168,76,0.4); color: var(--gold-dim);
+  padding: 0.4rem 0.9rem; border-radius: 3px; cursor: pointer; font-size: 0.75rem;
+  transition: all 0.2s; white-space: nowrap;
+}
+.list-item__edit:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+.cancel-btn {
+  padding: 0.85rem 1.5rem; background: transparent; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 3px; font-size: 0.8rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.cancel-btn:hover { border-color: var(--red); color: var(--red); }
