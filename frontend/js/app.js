@@ -96,6 +96,16 @@ const VIDEO_CATS = [
   { key: 'cat_fiqh',    slug: 'fiqh' },
 ];
 
+const CAT_MAP = {
+  'Fatawa':    { en: 'Fatawa',   ar: 'فتاوى'   },
+  'Aqeedah':   { en: 'Aqeedah',  ar: 'عقيدة'   },
+  'Tafseer':   { en: 'Tafseer',  ar: 'تفسير'   },
+  'Hadith':    { en: 'Hadith',   ar: 'حديث'    },
+  'Fiqh':      { en: 'Fiqh',     ar: 'فقه'     },
+  'Lectures':  { en: 'Lectures', ar: 'محاضرات' },
+  'Reminders': { en: 'Reminders',ar: 'تذكيرات' },
+};
+
 /* ─── State ─── */
 let currentLang = localStorage.getItem('lang') || 'en';
 let currentView = 'welcome';
@@ -106,6 +116,13 @@ let videos_search = '', videos_page = 1, videos_cat = '';
 const $ = id => document.getElementById(id);
 const main = document.getElementById('main-content');
 const t = key => LANG[currentLang][key];
+
+function getCatName(name) {
+  if (!name) return t('fatawa_card_label');
+  const entry = CAT_MAP[name];
+  if (!entry) return name;
+  return currentLang === 'ar' ? entry.ar : entry.en;
+}
 
 function formatDate(str) {
   const loc = currentLang === 'ar' ? 'ar-SA' : 'en-GB';
@@ -271,7 +288,7 @@ async function loadFatawa() {
     grid.innerHTML = articles.map(a => `
       <article class="fatwa-card" data-slug="${a.slug}">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
-          <p class="fatwa-card__label">${a.category_name || t('fatawa_card_label')}</p>
+          <p class="fatwa-card__label">${getCatName(a.category_name)}</p>
           ${a.fatwa_number ? `<span class="fatwa-card__number">${t('fatawa_number_label')} ${a.fatwa_number}</span>` : ''}
         </div>
         <h2 class="fatwa-card__title">${a.title}</h2>
@@ -303,7 +320,7 @@ async function renderFatwaArticle(slug) {
             <span class="back-btn__arrow">←</span> ${t('fatawa_back')}
           </button>
           <header class="article-header">
-            <p class="article-header__label">${a.category_name || t('fatawa_card_label')}${a.fatwa_number ? ` · <span style="color:var(--gold);opacity:0.6;">${t('fatawa_number_label')} ${a.fatwa_number}</span>` : ''}</p>
+            <p class="article-header__label">${getCatName(a.category_name)}${a.fatwa_number ? ` · <span style="color:var(--gold);opacity:0.6;">${t('fatawa_number_label')} ${a.fatwa_number}</span>` : ''}</p>
             <h1 class="article-header__title">${a.title}</h1>
             <p class="article-header__meta">${a.author} · ${formatDate(a.created_at)}</p>
           </header>
