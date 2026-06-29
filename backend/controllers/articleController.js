@@ -11,21 +11,33 @@ const getArticles = async (req, res) => {
     .order('fatwa_number', { ascending: true, nullsFirst: false })
     .range(offset, offset + Number(limit) - 1);
 
+  let countQuery = supabase
+    .from('articles')
+    .select('id', { count: 'exact', head: true })
+    .eq('published', 1);
+
   if (category) {
     const { data: cat } = await supabase.from('categories').select('id').eq('slug', category).single();
-    if (cat) query = query.eq('category_id', cat.id);
+    if (cat) {
+      query = query.eq('category_id', cat.id);
+      countQuery = countQuery.eq('category_id', cat.id);
+    }
   }
 
   if (search) {
     query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%,content.ilike.%${search}%`);
+    countQuery = countQuery.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%,content.ilike.%${search}%`);
   }
 
   if (lang) {
     query = query.eq('lang', lang);
+    countQuery = countQuery.eq('lang', lang);
   }
 
   const { data: articles, error } = await query;
   if (error) return res.status(500).json({ error: error.message });
+
+  const { count: total } = await countQuery;
 
   const mapped = (articles || []).map(a => ({
     ...a,
@@ -33,18 +45,13 @@ const getArticles = async (req, res) => {
     category_slug: a.categories?.slug
   }));
 
-  const { count: total } = await supabase
-    .from('articles')
-    .select('id', { count: 'exact', head: true })
-    .eq('published', 1);
-
   res.json({
     articles: mapped,
     pagination: {
       total: total || 0,
       page: Number(page),
       limit: Number(limit),
-      pages: Math.ceil((total || 0) / limit)
+      pages: Math.ceil((total || 0) / Number(limit))
     }
   });
 };
